@@ -91,7 +91,7 @@ public class SymmetricCipher {
 	 * {@link CascadeCipher#encryptSafe(byte[])} if you want to catch exception
 	 * @param data data to be encrypted
 	 * @return encrypted data */
-	public synchronized EncryptedData encrypt (byte[] data) {
+	public EncryptedData encrypt (byte[] data) {
 		try {
 			return encryptSafe(data);
 		} catch (GeneralSecurityException e) {
@@ -104,7 +104,7 @@ public class SymmetricCipher {
 	/** Encrypts some data, if there will be failure during encryption exception will be thrown
 	 * @param data data to be encrypted
 	 * @return encrypted data */
-	public synchronized EncryptedData encryptSafe (byte[] data) throws GeneralSecurityException {
+	public EncryptedData encryptSafe (byte[] data) throws GeneralSecurityException {
 		EncryptedData msg = new EncryptedData();
 		msg.iv = CryptoUtils.getRandomBytes16();
 
@@ -146,7 +146,7 @@ public class SymmetricCipher {
 	/** Decrypts some data, if there will be failure during decryption exception will be thrown
 	 * @param data data to be decrypted
 	 * @return decrypted data */
-	public synchronized byte[] decryptSafe (EncryptedData data) throws GeneralSecurityException {
+	public byte[] decryptSafe (EncryptedData data) throws GeneralSecurityException {
 		Cipher decrypter = Cipher.getInstance(algorithm, PROVIDER);
 		decrypter.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(data.iv));
 		return decrypter.doFinal(data.encrypted);

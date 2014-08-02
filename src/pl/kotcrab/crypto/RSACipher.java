@@ -86,7 +86,7 @@ public class RSACipher {
 	 * {@link RSACipher#encryptSafe(byte[])} if you want to catch exception
 	 * @param data data to be encrypted
 	 * @return encrypted data */
-	public synchronized byte[] encrypt (byte[] data) {
+	public byte[] encrypt (byte[] data) {
 		try {
 			return encrypter.doFinal(data);
 		} catch (GeneralSecurityException e) {
@@ -99,7 +99,7 @@ public class RSACipher {
 	/** Encrypts some data, if there will be failure during encryption exception will be thrown
 	 * @param data data to be encrypted
 	 * @return encrypted data */
-	public synchronized byte[] encryptSafe (byte[] data) throws GeneralSecurityException {
+	public byte[] encryptSafe (byte[] data) throws GeneralSecurityException {
 		return encrypter.doFinal(data);
 	}
 
@@ -107,7 +107,7 @@ public class RSACipher {
 	 * {@link RSACipher#decryptSafe(byte[])} if you want to catch exceptions
 	 * @param data data to be decrypted
 	 * @return decrypted data */
-	public synchronized byte[] decrypt (byte[] data) {
+	public byte[] decrypt (byte[] data) {
 		try {
 			return decrypter.doFinal(data);
 		} catch (GeneralSecurityException e) {
@@ -120,7 +120,7 @@ public class RSACipher {
 	/** Decrypts some data, if there will be failure during decryption exception will be thrown
 	 * @param data data to be decrypted
 	 * @return decrypted data */
-	public synchronized byte[] decryptSafe (byte[] data) throws GeneralSecurityException {
+	public byte[] decryptSafe (byte[] data) throws GeneralSecurityException {
 		return decrypter.doFinal(data);
 	}
 
