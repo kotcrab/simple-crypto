@@ -20,22 +20,24 @@ import java.security.GeneralSecurityException;
 
 /** Cascade cipher encrypts with 3 different algorithms. Uses {@link SymmetricCipher} as cipher.
  * @author Pawel Pastuszak */
-public class CascadeCipher {
+public class CascadeCipher implements SimpleCipher {
 	private boolean ready;
 
 	private SymmetricCipher cipher1;
 	private SymmetricCipher cipher2;
 	private SymmetricCipher cipher3;
 
-	private String algorithm1 = "AES";
-	private String algorithm2 = "Twofish";
-	private String algorithm3 = "Serpent";
+	private String algorithm1;
+	private String algorithm2;
+	private String algorithm3;
 
 	/** Constructs {@link CascadeCipher} with default 3 algorithms: AES, Twofish, Serpent. <br>
 	 * NOTE: Cipher is not ready yet, {@link CascadeCipher#initGenerateKeys()} or {@link CascadeCipher#initWithKeys()} must be
 	 * called to generate random keys or use provided keys. */
 	public CascadeCipher () {
-
+		algorithm1 = "AES";
+		algorithm2 = "Twofish";
+		algorithm3 = "Serpent";
 	}
 
 	/** Constructs {@link CascadeCipher} with default 3 provided algorithms. First data will be encrypted using algorithmName1 then
@@ -71,27 +73,11 @@ public class CascadeCipher {
 		ready = true;
 	}
 
-	/** Decrypts some data, if there will be failure during decryption null will be returned, use
-	 * {@link CascadeCipher#decryptSafe(byte[])} if you want to catch exceptions
-	 * @param data data to be decrypted
-	 * @return decrypted data */
-	public byte[] decrypt (EncryptedData data) {
-		checkReady();
-		return cipher1.decrypt(new EncryptedData(cipher2.decrypt(new EncryptedData(cipher3.decrypt(data)))));
-	}
-
-	/** Decrypts some data, if there will be failure during decryption exception will be thrown
-	 * @param data data to be decrypted
-	 * @return decrypted data */
-	public byte[] decryptSafe (EncryptedData data) throws GeneralSecurityException {
-		checkReady();
-		return cipher1.decryptSafe(new EncryptedData(cipher2.decryptSafe(new EncryptedData(cipher3.decryptSafe(data)))));
-	}
-
 	/** Encrypts some data, if there will be failure during encryption null will be returned, use
 	 * {@link CascadeCipher#encryptSafe(byte[])} if you want to catch exceptions
 	 * @param data data to be encrypted
 	 * @return encrypted data */
+	@Override
 	public EncryptedData encrypt (byte[] data) {
 		checkReady();
 		return cipher3.encrypt(cipher2.encrypt(cipher1.encrypt(data).getBytes()).getBytes());
@@ -100,9 +86,41 @@ public class CascadeCipher {
 	/** Encrypts some data, if there will be failure during encryption exception will be thrown
 	 * @param data data to be encrypted
 	 * @return encrypted data */
+	@Override
 	public EncryptedData encryptSafe (byte[] data) throws GeneralSecurityException {
 		checkReady();
 		return cipher3.encryptSafe(cipher2.encryptSafe(cipher1.encryptSafe(data).getBytes()).getBytes());
+	}
+
+	@Override
+	public byte[] decrypt (byte[] encryptedDataBytes) {
+		return decrypt(new EncryptedData(encryptedDataBytes));
+
+	}
+
+	/** Decrypts some data, if there will be failure during decryption null will be returned, use
+	 * {@link CascadeCipher#decryptSafe(byte[])} if you want to catch exceptions
+	 * @param data data to be decrypted
+	 * @return decrypted data */
+	@Override
+	public byte[] decrypt (EncryptedData data) {
+		checkReady();
+		return cipher1.decrypt(new EncryptedData(cipher2.decrypt(new EncryptedData(cipher3.decrypt(data)))));
+	}
+
+	@Override
+	public byte[] decryptSafe (byte[] encryptedDataBytes) throws GeneralSecurityException {
+		return decryptSafe(new EncryptedData(encryptedDataBytes));
+
+	}
+
+	/** Decrypts some data, if there will be failure during decryption exception will be thrown
+	 * @param data data to be decrypted
+	 * @return decrypted data */
+	@Override
+	public byte[] decryptSafe (EncryptedData data) throws GeneralSecurityException {
+		checkReady();
+		return cipher1.decryptSafe(new EncryptedData(cipher2.decryptSafe(new EncryptedData(cipher3.decryptSafe(data)))));
 	}
 
 	/** Returns secret key for first algorithm

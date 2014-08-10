@@ -28,9 +28,9 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
-import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+//TODO implements SimpleCipher
 /** RSA cipher, allows for encrypting and decrypting data.
  * @author Pawel Pastuszak */
 public class RSACipher {
@@ -57,6 +57,12 @@ public class RSACipher {
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/** Constructs {@link RSACipher} with provided key set
+	 * @param keyset key set */
+	public RSACipher (RSAKeySet keyset) {
+		this(keyset.getPublicKey(), keyset.getPrivatekey());
 	}
 
 	/** Constructs {@link RSACipher} with provided keys
@@ -132,11 +138,6 @@ public class RSACipher {
 		return publicKey;
 	}
 
-	@Deprecated
-	public String getPublicKeyBase64 () {
-		return Base64.encodeBase64String(publicKey.getEncoded());
-	}
-
 	public X509EncodedKeySpec getPublicKeySpec () {
 		return new X509EncodedKeySpec(publicKey.getEncoded());
 	}
@@ -150,6 +151,10 @@ public class RSACipher {
 		}
 
 		return null;
+	}
+
+	public RSAKeySet getKeySet () {
+		return new RSAKeySet(getPublicKeySpec(), getPrivateKeySpec());
 	}
 
 	/** Static method for quick decrypting data without creating objects

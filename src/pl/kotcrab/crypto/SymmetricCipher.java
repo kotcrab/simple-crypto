@@ -31,7 +31,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /** Easy to use symmetric cipher
  * @author Pawel Pastuszak */
-public class SymmetricCipher {
+public class SymmetricCipher implements SimpleCipher {
 
 	private static final String MODE = "/CBC/PKCS5Padding";
 	private static final String PROVIDER = "BC";
@@ -91,6 +91,7 @@ public class SymmetricCipher {
 	 * {@link CascadeCipher#encryptSafe(byte[])} if you want to catch exception
 	 * @param data data to be encrypted
 	 * @return encrypted data */
+	@Override
 	public EncryptedData encrypt (byte[] data) {
 		try {
 			return encryptSafe(data);
@@ -104,6 +105,7 @@ public class SymmetricCipher {
 	/** Encrypts some data, if there will be failure during encryption exception will be thrown
 	 * @param data data to be encrypted
 	 * @return encrypted data */
+	@Override
 	public EncryptedData encryptSafe (byte[] data) throws GeneralSecurityException {
 		EncryptedData msg = new EncryptedData();
 		msg.iv = CryptoUtils.getRandomBytes16();
@@ -118,6 +120,7 @@ public class SymmetricCipher {
 	 * {@link SymmetricCipher#decryptSafe(byte[])} if you want to catch exceptions
 	 * @param encryptedDataBytes data to be decrypted
 	 * @return decrypted data */
+	@Override
 	public byte[] decrypt (byte[] encryptedDataBytes) {
 		return decrypt(new EncryptedData(encryptedDataBytes));
 	}
@@ -126,6 +129,7 @@ public class SymmetricCipher {
 	 * {@link SymmetricCipher#decryptSafe(byte[])} if you want to catch exceptions
 	 * @param data data to be decrypted
 	 * @return decrypted data */
+	@Override
 	public byte[] decrypt (EncryptedData data) {
 		try {
 			return decryptSafe(data);
@@ -139,6 +143,7 @@ public class SymmetricCipher {
 	/** Decrypts some data, if there will be failure during decryption exception will be thrown
 	 * @param encryptedDataBytes data to be decrypted
 	 * @return decrypted data */
+	@Override
 	public byte[] decryptSafe (byte[] encryptedDataBytes) throws GeneralSecurityException {
 		return decryptSafe(new EncryptedData(encryptedDataBytes));
 	}
@@ -146,11 +151,11 @@ public class SymmetricCipher {
 	/** Decrypts some data, if there will be failure during decryption exception will be thrown
 	 * @param data data to be decrypted
 	 * @return decrypted data */
+	@Override
 	public byte[] decryptSafe (EncryptedData data) throws GeneralSecurityException {
 		Cipher decrypter = Cipher.getInstance(algorithm, PROVIDER);
 		decrypter.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(data.iv));
 		return decrypter.doFinal(data.encrypted);
-
 	}
-
+	
 }
