@@ -3,7 +3,7 @@ package pl.kotcrab.crypto;
 
 import java.security.GeneralSecurityException;
 
-public interface SimpleCipher {
+public interface SimpleSymmetricCipher {
 	public EncryptedData encrypt (byte[] data);
 
 	public EncryptedData encryptSafe (byte[] data) throws GeneralSecurityException;

@@ -31,7 +31,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /** Easy to use symmetric cipher
  * @author Pawel Pastuszak */
-public class SymmetricCipher implements SimpleCipher {
+public class SymmetricCipher implements SimpleSymmetricCipher {
 
 	private static final String MODE = "/CBC/PKCS5Padding";
 	private static final String PROVIDER = "BC";

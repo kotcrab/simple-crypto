@@ -20,7 +20,7 @@ import java.security.GeneralSecurityException;
 
 /** Cascade cipher encrypts with 3 different algorithms. Uses {@link SymmetricCipher} as cipher.
  * @author Pawel Pastuszak */
-public class CascadeCipher implements SimpleCipher {
+public class CascadeCipher implements SimpleSymmetricCipher {
 	private boolean ready;
 
 	private SymmetricCipher cipher1;
@@ -62,6 +62,10 @@ public class CascadeCipher implements SimpleCipher {
 		cipher2 = new SymmetricCipher(algorithm2);
 		cipher3 = new SymmetricCipher(algorithm3);
 		ready = true;
+	}
+
+	public void initWithKeys (byte[] argorithmKey1, byte[] argorithmKey2, byte[] argorithmKey3) {
+		initWithKeys(argorithmKey1, new EncryptedData(argorithmKey2), new EncryptedData(argorithmKey3));
 	}
 
 	/** Initializes cipher with provided keys, after this cipher is ready for use. Keys must be obtained via

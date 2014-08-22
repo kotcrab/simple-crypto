@@ -130,12 +130,12 @@ public class RSACipher {
 		return decrypter.doFinal(data);
 	}
 
-	public PrivateKey getPrivateKey () {
-		return privateKey;
-	}
-
 	public PublicKey getPublicKey () {
 		return publicKey;
+	}
+
+	public PrivateKey getPrivateKey () {
+		return privateKey;
 	}
 
 	public X509EncodedKeySpec getPublicKeySpec () {
